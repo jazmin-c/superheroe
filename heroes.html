@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Organizador de Tareas con Aventura y Recompensas</title>
+<style>
+  /* Base y paleta (principal: celeste) */
+  :root{
+    --celeste-50:#e7f8ff; --celeste-100:#d0f0ff; --celeste-500:#03a9f4; --celeste-600:#0288d1;
+    --verde:#4caf50; --naranja:#ff9800; --violeta:#9c27b0; --blanco:#ffffff; --gris:#f4f6f8; --texto:#123;
+    --radius:14px; --gap:12px; --shadow:0 6px 18px rgba(2,24,40,0.08);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,var(--celeste-50), #f0fcff 60%);
+    color:var(--texto); -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; align-items:center;
+  }
+  header{width:100%; background:linear-gradient(90deg,var(--celeste-500),var(--celeste-600)); color:var(--blanco); padding:14px 18px; box-shadow:var(--shadow); position:sticky; top:0; z-index:40}
+  header .wrap{max-width:980px; margin:0 auto; display:flex; gap:12px; align-items:center}
+  header h1{margin:0;font-size:18px}
+  main{width:100%; max-width:980px; padding:18px; display:grid; grid-template-columns: 1fr 380px; gap:18px}
+
+  /* Cards */
+  .card{background:var(--blanco); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow)}
+  .section-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .small{font-size:13px;color:#567;}
+
+  /* Lista de tareas */
+  #task-list{list-style:none;padding:0;margin:10px 0 0 0;display:flex;flex-direction:column;gap:10px}
+  .task{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;background:linear-gradient(180deg,var(--celeste-50),var(--blanco));border:1px solid rgba(2,136,209,0.06)}
+  .task-icon{width:56px;height:56px;border-radius:12px;background:var(--blanco);display:grid;place-items:center;font-size:26px;box-shadow:0 4px 10px rgba(2,24,40,0.04)}
+  .task-main{flex:1}
+  .task-main h3{margin:0 0 6px 0;font-size:16px}
+  .steps{display:flex;flex-direction:column;gap:6px}
+  .step{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;background:#f7fdff}
+  .step input[type="checkbox"]{transform:scale(1.25);margin-right:6px}
+  .task-actions{display:flex;flex-direction:column;gap:8px}
+
+  /* Botones con colores alternados */
+  .btn{border:0;padding:8px 10px;border-radius:10px;color:var(--blanco);cursor:pointer;font-weight:600}
+  .btn-celeste{background:linear-gradient(90deg,var(--celeste-500),var(--celeste-600));}
+  .btn-verde{background:linear-gradient(90deg,var(--verde),#388e3c);}
+  .btn-naranja{background:linear-gradient(90deg,var(--naranja),#fb8c00);}
+  .btn-violeta{background:linear-gradient(90deg,var(--violeta),#7b1fa2);}
+  .btn-ghost{background:transparent;border:1px solid rgba(2,136,209,0.12);color:var(--celeste-600)}
+
+  /* Añadir tarea inline */
+  .add-row{display:flex;gap:8px;margin-top:12px}
+  .add-row input, .add-row textarea{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(2,24,40,0.06);font-size:14px}
+  .add-row textarea{resize:vertical}
+
+  /* Panel derecho */
+  .side{display:flex;flex-direction:column;gap:12px}
+  .meter{padding:12px;border-radius:12px;background:linear-gradient(180deg,var(--blanco),#f8feff);}
+  .meter-bar{height:16px;background:#e6f7ff;border-radius:12px;overflow:hidden}
+  .meter-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--celeste-500),#66c2ff);transition:width .6s}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .badge{background:#fff;padding:6px 8px;border-radius:8px;border:1px solid rgba(2,24,40,0.04);font-size:13px}
+  .rewards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .reward-card{padding:10px;border-radius:10px;text-align:center;background:linear-gradient(180deg,#fff,#fff8f2);border:1px solid rgba(255,152,0,0.06)}
+
+
+  /* Panel padres */
+  #parent-panel{margin-top:8px}
+  #parent-panel input,#parent-panel textarea,#parent-panel select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(2,24,40,0.06);margin-top:6px}
+  #add-task-btn{margin-top:8px}
+
+  /* Notification */
+  #notification{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:linear-gradient(90deg,var(--naranja),#ffb74d);color:white;padding:10px 14px;border-radius:10px;display:none;z-index:60}
+
+  /* Responsive */
+  @media (max-width:980px){ main{grid-template-columns:1fr 340px; } }
+  @media (max-width:800px){ main{grid-template-columns:1fr;} header .wrap{flex-direction:column;align-items:flex-start} .side{order:2} }
+  @media (max-width:520px){
+    #puzzle-grid{grid-template-columns:repeat(3,56px)}
+    .puzzle-piece{width:56px;height:56px;font-size:22px}
+    .task-icon{width:48px;height:48px;font-size:22px}
+    .add-row{flex-direction:column}
+    .side{width:100%}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--celeste-500),var(--celeste-600));display:grid;place-items:center;color:var(--blanco);font-weight:700">HR</div>
+      <div>
+        <h1>Organizador de Tareas con Aventura y Recompensas</h1>
+        <div class="small">Diseñado para niños con TDAH — rutinas simples, recompensas inmediatas</div>
+      </div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="btn btn-celeste" id="startGuided">Iniciar Rutina Guiada</button>
+      <button class="btn btn-ghost" id="openParent">Panel Padres</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <div class="section-title"><div><strong>Mis Tareas</strong><div class="small">Divide cada tarea en pasos pequeños</div></div><div class="small">Puntos: <strong id="points">0</strong> ⭐</div></div>
+
+    <ul id="task-list" aria-live="polite"></ul>
+
+    <div class="add-row">
+      <input id="quick-task-name" placeholder="Nueva tarea (ej: Cepillarse los dientes)" />
+      <input id="quick-task-icon" placeholder="Emoji (ej: 🪥)" style="width:88px" />
+      <button class="btn btn-verde" id="quick-add">Agregar</button>
+    </div>
+
+    <div style="margin-top:10px" class="small">O usa el panel para padres para tareas con pasos y recompensas reales.</div>
+
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-naranja" id="completeAll">Marcar todo completado</button>
+      <button class="btn btn-violeta" id="resetDay">Resetear día</button>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="card meter">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div><strong>Medidor de Héroe</strong><div class="small">Progreso del día</div></div><div id="heroLevel">Nivel 1</div></div>
+      <div style="margin-top:10px" class="meter-bar"><div id="meterFill" class="meter-fill"></div></div>
+      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center"><div class="small">Tareas completadas: <strong id="doneCount">0</strong></div><div class="small">Meta diaria: <strong id="dailyGoal">5</strong></div></div>
+      <div class="badges" id="badges"></div>
+    </div>
+
+    <div class="card">
+      <img id="character" src="https://i.imgur.com/7r2hhZI.png" alt="Avatar" />
+      <div id="energy-bar"><div id="energy-bar-fill"></div></div>
+      <div id="avatar-accessories"></div>
+    </div>
+
+
+    <div class="card">
+      <div id="puzzle-grid"></div>
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-celeste" id="reset-minigame">Reiniciar Rompecabezas</button><div id="minigame-message" class="small" style="margin-left:auto"></div></div>
+    </div>
+  </aside>
+</main>
+
+<!-- Panel para padres (oculto por defecto) -->
+<div id="parent-panel" class="card" style="max-width:980px;margin:14px;display:none">
+  <h2>Panel para Padres y Educadores</h2>
+  <label>Nombre de la tarea:</label>
+  <input id="task-name" placeholder="Ej. Cepillarse dientes" />
+  <label>Ícono (emoji):</label>
+  <input id="task-icon" placeholder="🪥" maxlength="2" />
+  <label>Pasos (separados por coma):</label>
+  <textarea id="task-steps" rows="2" placeholder="Cepillar, Enjuagar, Sonreír"></textarea>
+  <label>Recompensa real (opcional):</label>
+  <input id="real-reward" placeholder="Salida, Dulce, Tiempo extra" />
+  <label>Puntos necesarios para recompensa real:</label>
+  <input id="points-threshold" type="number" min="1" />
+  <button id="add-task-btn" class="btn btn-verde">Agregar Tarea</button>
+  <button id="close-parent" class="btn btn-ghost" style="margin-left:8px">Cerrar</button>
+
+  <div id="statistics" style="margin-top:12px">
+    <h3>Estadísticas</h3>
+    <p>Tareas completadas: <span id="tasks-completed">0</span> / <span id="tasks-total">0</span></p>
+    <p>Puntos acumulados: <span id="stat-points">0</span></p>
+    <div id="rewards-real-list"></div>
+  </div>
+</div>
+
+<div id="notification"></div>
+
+<script>
+// --- Estado inicial ---
+const STORAGE_KEY = 'heroroutine_v2';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+  points:0, weekScore:0, dailyGoal:5, doneCount:0, badges:[], settings:{sound:true,avatarColor:'#ffe29a'},
+  tasks:[
+    {id:1,icon:'🪥',name:'Cepillarse los dientes',steps:['Abrir pasta','Aplicar al cepillo','Cepillar 2 min'],completedSteps:[],completed:false},
+    {id:2,icon:'🎒',name:'Hacer la mochila',steps:['Revisar cuadernos','Guardar lonchera','Asegurar botella'],completedSteps:[],completed:false},
+    {id:3,icon:'🧸',name:'Guardar los juguetes',steps:['Recoger piezas','Guardar en caja'],completedSteps:[],completed:false},
+    {id:4,icon:'🛏️',name:'Hacer la cama',steps:['Acomodar almohada','Tirar colcha'],completedSteps:[],completed:false},
+    {id:5,icon:'📚',name:'Leer un libro',steps:['Elegir libro','Leer 10 min'],completedSteps:[],completed:false}
+  ],
+  realRewards:[], avatarAccessories:[], avatarEnergy:0
+};
+
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+// --- DOM refs ---
+const taskListEl = document.getElementById('task-list');
+const pointsEl = document.getElementById('points');
+const meterFill = document.getElementById('meterFill');
+const doneCountEl = document.getElementById('doneCount');
+const heroLevelEl = document.getElementById('heroLevel');
+const badgesEl = document.getElementById('badges');
+const shopEl = document.getElementById('shop');
+const puzzleGrid = document.getElementById('puzzle-grid');
+const energyFill = document.getElementById('energy-bar-fill');
+const avatarAccessoriesEl = document.getElementById('avatar-accessories');
+const notificationEl = document.getElementById('notification');
+const tasksCompletedEl = document.getElementById('tasks-completed');
+const tasksTotalEl = document.getElementById('tasks-total');
+const statPointsEl = document.getElementById('stat-points');
+
+// Buttons
+const quickAddBtn = document.getElementById('quick-add');
+const quickName = document.getElementById('quick-task-name');
+const quickIcon = document.getElementById('quick-task-icon');
+const completeAllBtn = document.getElementById('completeAll');
+const resetDayBtn = document.getElementById('resetDay');
+const startGuidedBtn = document.getElementById('startGuided');
+const openParentBtn = document.getElementById('openParent');
+const parentPanel = document.getElementById('parent-panel');
+const closeParentBtn = document.getElementById('close-parent');
+const addTaskBtn = document.getElementById('add-task-btn');
+const resetMinigameBtn = document.getElementById('reset-minigame');
+
+// Minigame data
+
+// helper: show notification
+function showNotification(msg, color){ notificationEl.textContent = msg; notificationEl.style.background = color || 'linear-gradient(90deg,var(--naranja),#ffb74d)'; notificationEl.style.display='block'; setTimeout(()=>{ notificationEl.style.display='none'; },3600); }
+
+// render tasks
+function renderTasks(){ taskListEl.innerHTML=''; state.tasks.forEach((t, idx)=>{
+  const li = document.createElement('li'); li.className='task'; li.dataset.id = t.id;
+  const icon = document.createElement('div'); icon.className='task-icon'; icon.textContent = t.icon || '⭐';
+  const main = document.createElement('div'); main.className='task-main';
+  const h3 = document.createElement('h3'); h3.textContent = t.name;
+  main.appendChild(h3);
+  if(t.steps && t.steps.length>0){ const steps = document.createElement('div'); steps.className='steps'; t.steps.forEach((s,i)=>{
+    const stepEl = document.createElement('label'); stepEl.className='step'; if(t.completedSteps.includes(i)) stepEl.classList.add('completed');
+    const cb = document.createElement('input'); cb.type='checkbox'; cb.checked = t.completedSteps.includes(i);
+    cb.addEventListener('change', ()=>{
+      if(cb.checked){ if(!t.completedSteps.includes(i)) t.completedSteps.push(i); stepEl.classList.add('completed'); showNotification('Paso completado','linear-gradient(90deg,var(--celeste-500),#66c2ff)'); }
+      else{ t.completedSteps = t.completedSteps.filter(x=>x!==i); stepEl.classList.remove('completed'); }
+      // enable complete button if all steps done
+      renderTasks(); save(); updateMeter();
+    });
+    stepEl.appendChild(cb); stepEl.appendChild(document.createTextNode(s)); steps.appendChild(stepEl);
+  }); main.appendChild(steps); }
+
+  const actions = document.createElement('div'); actions.className='task-actions';
+  // alternate button colors per task index
+  const btnClasses = ['btn-celeste','btn-verde','btn-naranja','btn-violeta'];
+  const colorClass = btnClasses[idx % btnClasses.length];
+  const doneBtn = document.createElement('button'); doneBtn.className = 'btn ' + colorClass; doneBtn.textContent = t.completed ? 'Completada' : 'Hecho';
+  doneBtn.disabled = t.completed;
+  doneBtn.addEventListener('click', ()=>{
+    if(t.steps && t.steps.length>0 && t.completedSteps.length !== t.steps.length){ showNotification('Primero completa todos los pasos','linear-gradient(90deg,var(--celeste-500),#66c2ff)'); return; }
+    completeTask(t.id); save(); renderTasks(); updateMeter();
+  });
+
+  const editBtn = document.createElement('button'); editBtn.className='btn btn-ghost'; editBtn.style.color='var(--celeste-600)'; editBtn.textContent='Editar';
+  editBtn.addEventListener('click', ()=> openEditTask(t.id));
+  const delBtn = document.createElement('button'); delBtn.className='btn btn-ghost'; delBtn.textContent='Eliminar'; delBtn.style.color='#d32f2f';
+  delBtn.addEventListener('click', ()=>{ if(confirm('Eliminar tarea?')){ state.tasks = state.tasks.filter(x=>x.id!==t.id); save(); renderTasks(); updateMeter(); } });
+
+  actions.appendChild(doneBtn); actions.appendChild(editBtn); actions.appendChild(delBtn);
+  li.appendChild(icon); li.appendChild(main); li.appendChild(actions);
+  taskListEl.appendChild(li);
+}); updateStats(); }
+
+// complete a task
+function completeTask(id){ const t = state.tasks.find(x=>x.id===id); if(!t || t.completed) return; t.completed = true; state.points += 10; state.weekScore +=10; state.doneCount +=1; showNotification('¡Tarea completada! +10 puntos','linear-gradient(90deg,var(--celeste-500),#66c2ff)'); increaseEnergy(10); addAccessoryIfEligible(); checkRealRewards(); save(); renderShop(); renderTasks(); updateMeter(); }
+
+function increaseEnergy(amount){ state.avatarEnergy = Math.min(100, (state.avatarEnergy||0) + amount); energyFill.style.width = state.avatarEnergy + '%'; }
+function addAccessoryIfEligible(){ if(state.points % 30 === 0){ const pool = ['🎩','🕶️','🌈','🐾','🎒']; const pick = pool[state.avatarAccessories.length % pool.length]; state.avatarAccessories.push(pick); showNotification('¡Nuevo accesorio: '+pick+'!'); renderAvatarAccessories(); } }
+function renderAvatarAccessories(){ avatarAccessoriesEl.innerHTML=''; if(state.avatarAccessories && state.avatarAccessories.length>0){ state.avatarAccessories.forEach(a=>{ const sp = document.createElement('span'); sp.textContent=a; sp.style.margin='0 6px'; avatarAccessoriesEl.appendChild(sp); }); } }
+
+// update meter and level
+function updateMeter(){ const total = state.tasks.length; const done = state.tasks.filter(t=>t.completed).length; const percent = total? Math.round((done/total)*100):0; meterFill.style.width = percent + '%'; document.getElementById('doneCount').textContent = done; document.getElementById('points').textContent = state.points; heroLevelEl.textContent = 'Nivel ' + (Math.floor(state.weekScore/50)+1); if(done === total && total>0){ showNotification('🎯 ¡Completaste todas tus tareas! Eres un héroe del día!','linear-gradient(90deg,#66bb6a,#43a047)'); }
+}
+
+// shop (simple)
+function renderShop(){ shopEl.innerHTML=''; const items = [ {id:'color-avatar',title:'Cambio color avatar',cost:20},{id:'sticker1',title:'Sticker Estrella',cost:8},{id:'sticker2',title:'Sticker Cohete',cost:12} ]; items.forEach(it=>{ const card = document.createElement('div'); card.className='reward-card'; card.innerHTML = `<div style="font-weight:700">${it.title}</div><div class="small">${it.cost} ⭐</div>`; const btn = document.createElement('button'); btn.className='btn btn-celeste'; btn.textContent='Comprar'; btn.style.marginTop='8px'; btn.addEventListener('click', ()=>{ if(state.points < it.cost){ showNotification('No tienes suficientes estrellas','linear-gradient(90deg,#ff8a65,#ff7043)'); return; } state.points -= it.cost; if(it.id==='color-avatar'){ /* change avatar tint */ document.getElementById('character').style.filter = 'hue-rotate(150deg)'; } else { state.badges.push(it.title); } save(); renderShop(); updateMeter(); }); card.appendChild(btn); shopEl.appendChild(card); }); }
+
+// Quick add
+quickAddBtn.addEventListener('click', ()=>{ const name = quickName.value.trim(); const icon = quickIcon.value.trim() || '📝'; if(!name) return showNotification('Escribe un nombre para la tarea'); const newTask = { id:Date.now(), icon, name, steps:[], completedSteps:[], completed:false }; state.tasks.push(newTask); quickName.value=''; quickIcon.value=''; save(); renderTasks(); updateMeter(); showNotification('Tarea agregada','linear-gradient(90deg,var(--celeste-500),#66c2ff)'); });
+
+// complete all
+completeAllBtn.addEventListener('click', ()=>{ state.tasks.forEach(t=>{ if(!t.completed){ t.completed=true; state.points+=5; state.doneCount+=1; } }); save(); renderTasks(); updateMeter(); showNotification('Todas las tareas marcadas como completadas'); });
+// reset day
+resetDayBtn.addEventListener('click', ()=>{ if(!confirm('Resetear el día: se marcarán las tareas como no hechas?')) return; state.tasks.forEach(t=>{ t.completed=false; t.completedSteps=[]; }); state.points=0; state.weekScore=0; state.avatarAccessories=[]; state.avatarEnergy=0; save(); renderTasks(); renderShop(); updateMeter(); renderAvatarAccessories(); showNotification('Día reseteado'); });
+
+// Guided routine (simple sequential overlay)
+startGuidedBtn.addEventListener('click', ()=>{ startGuided(); });
+function startGuided(){ const next = findNextStep(); if(!next){ showNotification('¡No hay pasos pendientes!','linear-gradient(90deg,#66bb6a,#43a047)'); return; }
+  const modal = document.createElement('div'); modal.style.position='fixed'; modal.style.inset='0'; modal.style.display='grid'; modal.style.placeItems='center'; modal.style.background='rgba(2,12,24,0.35)'; modal.style.zIndex=9999; const sheet = document.createElement('div'); sheet.className='card'; sheet.style.maxWidth='420px'; sheet.style.textAlign='center'; sheet.innerHTML = `<h3>Rutina guiada</h3><p>Siguiente paso: <strong>${next.step}</strong></p><div style="margin-top:12px;display:flex;gap:8px;justify-content:center"><button class="btn btn-verde" id="gdo">Marcar hecho</button><button class="btn btn-ghost" id="gskip">Saltar</button></div>`;
+  modal.appendChild(sheet); document.body.appendChild(modal);
+  sheet.querySelector('#gdo').addEventListener('click', ()=>{ toggleStep(next.taskId,next.stepIdx); document.body.removeChild(modal); setTimeout(startGuided,200); });
+  sheet.querySelector('#gskip').addEventListener('click', ()=>{ document.body.removeChild(modal); setTimeout(startGuided,200); });
+}
+function findNextStep(){ for(const t of state.tasks){ for(let i=0;i<(t.steps||[]).length;i++){ if(!t.completedSteps.includes(i)) return {taskId:t.id,stepIdx:i,step:t.steps[i]}; } } return null; }
+function toggleStep(taskId,stepIdx){ const t = state.tasks.find(x=>x.id===taskId); if(!t) return; if(t.completedSteps.includes(stepIdx)){ t.completedSteps = t.completedSteps.filter(s=>s!==stepIdx); } else { t.completedSteps.push(stepIdx); } save(); renderTasks(); }
+
+// Parent panel controls
+openParentBtn.addEventListener('click', ()=>{ parentPanel.style.display='block'; parentPanel.scrollIntoView({behavior:'smooth'}); }); closeParentBtn.addEventListener('click', ()=>{ parentPanel.style.display='none'; });
+addTaskBtn.addEventListener('click', ()=>{
+  const name = document.getElementById('task-name').value.trim(); const icon = document.getElementById('task-icon').value.trim() || '📝';
+  const stepsRaw = document.getElementById('task-steps').value.trim(); const steps = stepsRaw? stepsRaw.split(',').map(s=>s.trim()).filter(Boolean):[];
+  const rewardName = document.getElementById('real-reward').value.trim(); const threshold = Number(document.getElementById('points-threshold').value) || 0;
+  if(!name) return alert('Ingresa el nombre de la tarea');
+  const newTask = { id:Date.now(), icon, name, steps, completedSteps:[], completed:false };
+  state.tasks.push(newTask);
+  if(rewardName && threshold>0){ state.realRewards.push({name:rewardName,threshold,granted:false}); }
+  document.getElementById('task-name').value=''; document.getElementById('task-icon').value=''; document.getElementById('task-steps').value=''; document.getElementById('real-reward').value=''; document.getElementById('points-threshold').value='';
+  save(); renderTasks(); renderRealRewards(); showNotification('Tarea agregada','linear-gradient(90deg,var(--celeste-500),#66c2ff)');
+});
+
+// Edit task (simple inline via prompt for brevity)
+function openEditTask(id){ const t = state.tasks.find(x=>x.id===id); if(!t) return; const newName = prompt('Editar nombre', t.name); if(newName===null) return; t.name = newName.trim()||t.name; save(); renderTasks(); }
+
+// Real rewards
+function checkRealRewards(){ state.realRewards && state.realRewards.forEach(r=>{ if(!r.granted && state.points>=r.threshold){ r.granted=true; showNotification('¡Recompensa real desbloqueada: '+r.name+'!','linear-gradient(90deg,#66bb6a,#43a047)'); renderRealRewards(); } }); }
+function renderRealRewards(){ const el = document.getElementById('rewards-real-list'); el.innerHTML=''; if(!state.realRewards || state.realRewards.length===0){ el.textContent='No hay recompensas reales configuradas.'; return; } const ul=document.createElement('ul'); state.realRewards.forEach(r=>{ const li=document.createElement('li'); li.textContent = `${r.name} (se desbloquea a ${r.threshold} pts) ${r.granted? '🎉':''}`; ul.appendChild(li); }); el.appendChild(ul); }
+
+// Stats update
+function updateStats(){ tasksCompletedEl.textContent = state.tasks.filter(t=>t.completed).length; tasksTotalEl.textContent = state.tasks.length; statPointsEl.textContent = state.points; }
+
+// Puzzle game
+function renderPuzzle(){ puzzleGrid.innerHTML=''; puzzleState = shuffle([...puzzlePiecesOrder]); puzzleState.forEach((p,i)=>{ const div = document.createElement('div'); div.className='puzzle-piece'; div.textContent = p; div.draggable=true; div.dataset.index = i; puzzleGrid.appendChild(div); }); }
+function shuffle(a){ let i=a.length; while(i){ const j=Math.floor(Math.random()*i--); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+// drag/drop
+puzzleGrid.addEventListener('dragstart', e=>{ draggedItem = e.target; e.target.classList.add('dragging'); e.dataTransfer.setData('text/plain', e.target.dataset.index); });
+puzzleGrid.addEventListener('dragend', e=>{ if(e.target) e.target.classList.remove('dragging'); draggedItem=null; });
+puzzleGrid.addEventListener('dragover', e=> e.preventDefault());
+puzzleGrid.addEventListener('drop', e=>{ e.preventDefault(); if(!draggedItem) return; const from = Number(draggedItem.dataset.index); const toEl = e.target.closest('.puzzle-piece'); if(!toEl) return; const to = Number(toEl.dataset.index); [puzzleState[from],puzzleState[to]]=[puzzleState[to],puzzleState[from]]; renderPuzzlePositions(); checkPuzzleCompletion(); });
+function renderPuzzlePositions(){ Array.from(puzzleGrid.children).forEach((ch,i)=>{ ch.textContent = puzzleState[i]; ch.dataset.index = i; }); }
+function checkPuzzleCompletion(){ const solved = puzzleState.every((p,i)=>p===puzzlePiecesOrder[i]); document.getElementById('minigame-message').textContent = solved? '¡Felicidades! Completaste el rompecabezas 🎉':''; if(solved){ state.points+=15; save(); updateMeter(); showNotification('Rompecabezas completado: +15 pts','linear-gradient(90deg,#66bb6a,#43a047)'); } }
+resetMinigameBtn.addEventListener('click', ()=>{ renderPuzzle(); document.getElementById('minigame-message').textContent=''; });
+
+// periodic gentle reminder
+setInterval(()=>{ const pending = state.tasks.filter(t=>!t.completed); if(pending.length>0){ showNotification('Recuerda: '+pending[0].name,'linear-gradient(90deg,var(--celeste-500),#66c2ff)'); /* sound optional */ } }, 90000);
+
+// init
+function init(){ renderTasks(); renderShop(); renderPuzzle(); renderRealRewards(); renderAvatarAccessories(); updateMeter(); updateStats(); }
+init();
+
+</script>
+</body>
+</html>

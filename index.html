@@ -6,7 +6,6 @@
 <title>CogniKids— Rutina / Panel Padres</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  /* Tu CSS original completamente aquí (igual que antes) */
   :root{
     --bg1: #b3d4fe; --bg2:#fffaf6;
     --pastel-blue: #cfeff9; --pastel-mint:#d7f9e7; --pastel-lav:#dcc4ff; --pastel-peach:#fff2e6;
@@ -59,7 +58,7 @@
   .task-view.card{
     background:linear-gradient(180deg,#fff,#fffefc); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);
     display:flex; flex-direction:column; gap:12px; min-height:260px; justify-content:center; align-items:center; position:relative;
-    overflow:hidden;
+    overflow:hidden; width: 100%;
   }
   .task-card{width:100%;max-width:720px; display:grid; grid-template-columns: 1fr; gap:12px; align-items:center; justify-items:center}
   .task-step{
@@ -77,7 +76,7 @@
   }
   .side.card{
     border-radius:var(--radius); padding:16px; background:linear-gradient(180deg,#ffffff,#fffdfb); box-shadow:var(--shadow);
-    display:flex;flex-direction:column;gap:12px; height:fit-content;
+    display:flex;flex-direction:column;gap:12px; height:fit-content; width: 100%; max-width: 360px;
   }
   .meter{height:12px;background:#f0f8ff;border-radius:12px;overflow:hidden}
   .meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#bfeeff,#a7e6ff);transition:width .6s ease}
@@ -113,7 +112,19 @@
   .page-enter-active{opacity:1; transform:none; transition: all .38s cubic-bezier(.2,.9,.3,1)}
   .page-exit{opacity:1}
   .page-exit-active{opacity:0; transform:translateX(-12px); transition: all .28s ease}
-  @media (max-width:920px){ .app{grid-template-columns:1fr; } .gear{position:fixed; right:18px; top:18px; } header.app-header{grid-column:1} }
+  @media (max-width:920px){
+    .app{
+      grid-template-columns: 1fr !important;
+      justify-items: center;
+    }
+    .task-view.card,
+    aside.side.card{
+      width: 90vw;
+      max-width: 100%;
+      margin: 0 auto;
+      align-items: center;
+    }
+  }
 </style>
 </head>
 <body>
@@ -130,7 +141,6 @@
       <svg viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="#053047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 2.29 17.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09c.67 0 1.21-.3 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 0 1 6.12 2.29l.06.06c.5.5 1.3.65 1.98.36.7-.29 1.1-1 1.1-1.71V3a2 2 0 0 1 4 0v.09c0 .7.4 1.42 1.1 1.71.69.29 1.48.14 1.98-.36l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06c-.5.5-.65 1.3-.36 1.98.29.7 1 1.1 1.71 1.1H21a2 2 0 0 1 0 4h-.09c-.7 0-1.42.4-1.71 1z" stroke="#053047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </header>
-
   <main>
     <section class="welcome card" id="welcomeCard" aria-live="polite">
       <div class="greeting">
@@ -144,9 +154,7 @@
         <input id="nameInput" placeholder="Tu nombre..." aria-label="Nombre del usuario" />
         <button class="btn btn-primary" id="startBtn">Comenzar</button>
       </div>
-
     </section>
-
     <section class="task-view card" id="taskView" style="display:none">
       <div class="task-card" id="taskCardContainer" aria-live="polite"></div>
       <button class="btn btn-primary" id="markDoneBtn" disabled>Marcar como completada</button>
@@ -160,7 +168,6 @@
       </div>
     </section>
   </main>
-
   <aside class="side card">
     <div>
       <strong>Progreso</strong>
@@ -171,21 +178,16 @@
       <strong>Próxima tarea</strong>
       <div id="nextPreview" class="small">—</div>
     </div>
-
     <div class="reward-block">
       <strong>Tu recompensa</strong>
       <div id="rewardText" class="reward-text" aria-label="Texto de recompensa"></div>
     </div>
   </aside>
-
 </div>
-
 <div id="modalRoot" style="display:none"></div>
-
 <script>
   // Borra datos previos guardados al iniciar para prueba limpia
   localStorage.removeItem('heroroutine_spa_v1');
-
   const STORAGE_KEY = 'heroroutine_spa_v1';
   let state = {
     userName: '',
@@ -198,7 +200,6 @@
     realRewards: ["Una salida al parque"],
     pointsAwardedTasks: [],
   };
-
   const welcomeCard = document.getElementById('welcomeCard');
   const nameInput = document.getElementById('nameInput');
   const startBtn = document.getElementById('startBtn');
@@ -215,14 +216,10 @@
   const modalRoot = document.getElementById('modalRoot');
   const rewardTextEl = document.getElementById('rewardText');
   const markDoneBtn = document.getElementById('markDoneBtn');
-
   let currentIndex = 0;
-
-  // Función para guardar el estado en localStorage
   function saveState(){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
-
   function initUI(){
     if(state.userName !== ''){
       nameInput.value = state.userName;
@@ -233,14 +230,10 @@
     updateNextPreview();
     renderRewardText();
   }
-
-  // Mostrar saludo de bienvenida
   function showWelcomeGreeting(name){
     const title = document.getElementById('welcomeTitle');
     title.textContent = `Hola, ${name} 👋 ¿Estás listo para tus tareas de hoy?`;
   }
-
-  // Evento click del botón Comenzar
   startBtn.addEventListener('click', () => {
     let name = nameInput.value.trim();
     if(name === '') name = 'Amigo';
@@ -260,13 +253,9 @@
       renderTaskAt(0);
     }, 380);
   });
-
-  // Navegar a tarea anterior
   prevTaskBtn.addEventListener('click', () => {
     if(currentIndex > 0) renderTaskAt(currentIndex - 1);
   });
-
-  // Navegar a tarea siguiente
   nextTaskBtn.addEventListener('click', () => {
     const t = state.tasks[currentIndex];
     if(!t) return;
@@ -286,8 +275,6 @@
     updateStats();
     renderTaskAt(Math.min(currentIndex+1, state.tasks.length-1));
   });
-
-  // Marcar tarea como completada
   markDoneBtn.addEventListener('click', () => {
     const t = state.tasks[currentIndex];
     if(!t) return;
@@ -307,17 +294,15 @@
     showToast('Tarea completada +10 ⭐');
     updateStats();
     renderTaskAt(currentIndex);
-    setTimeout(()=>{
+    setTimeout(() => {
       if(currentIndex < state.tasks.length - 1) renderTaskAt(currentIndex + 1);
     }, 700);
   });
-
-  // Renderizado y lógica de tareas, pasos y checkboxes
   function renderTaskAt(index){
     if(state.tasks.length === 0){
       taskCardContainer.innerHTML = `<div class="task-step"><h3>No hay tareas</h3><p>Pedile a mamá o papá que agregue tareas desde el panel de padres.</p></div>`;
       nextPreview.textContent = '—'; 
-      updateStats(); 
+      updateStats();
       return;
     }
     if(index < 0) index = 0;
@@ -406,14 +391,12 @@
     updateControls();
     updateNextPreview();
   }
-
   function updateControls(){
     prevTaskBtn.disabled = currentIndex === 0;
     nextTaskBtn.disabled = currentIndex >= state.tasks.length - 1;
     const t = state.tasks[currentIndex];
     markDoneBtn.disabled = !t || t.completed;
   }
-
   function updateStats(){
     const total = state.tasks.length;
     const done = state.tasks.filter(t=>t.completed).length;
@@ -424,7 +407,6 @@
     meterFill.style.transition = 'width 0.6s ease';
     meterFill.style.width = percent + '%';
   }
-
   function updateNextPreview(){
     if(state.tasks.length === 0){ nextPreview.textContent = '—'; return; }
     const idx = Math.min(currentIndex+1, state.tasks.length-1);
@@ -432,7 +414,6 @@
     nextPreview.textContent = next ? `${next.icon || ''} ${next.name}` : '—';
     updateStats();
   }
-
   function showFloatingStars(text, container){
     const star = document.createElement('div');
     star.textContent = text;
@@ -453,17 +434,16 @@
     }, 20);
     setTimeout(()=> star.remove(), 1000);
   }
-
   function showToast(msg){
     const t = document.createElement('div');
     t.textContent = msg;
-    t.style.position='fixed';
-    t.style.left='50%';
-    t.style.transform='translateX(-50%)';
+    t.style.position = 'fixed';
+    t.style.left = '50%';
+    t.style.transform = 'translateX(-50%)';
     t.style.top = '20px';
-    t.style.padding='10px 14px';
+    t.style.padding = '10px 14px';
     t.style.background = 'linear-gradient(90deg,#ffd6a5,#ffd6a5)';
-    t.style.borderRadius='10px';
+    t.style.borderRadius = '10px';
     t.style.boxShadow = '0 8px 24px rgba(12,20,30,0.08)';
     t.style.zIndex = 12000;
     document.body.appendChild(t);
@@ -473,13 +453,10 @@
       setTimeout(()=> t.remove(), 450);
     }, 1600);
   }
-
   function renderRewardText(){
     rewardTextEl.textContent = state.realRewards.length > 0 ? state.realRewards[0] : '(No hay recompensa definida)';
   }
-
   openParentBtn.addEventListener('click', ()=> openPasswordPrompt());
-
   function openPasswordPrompt(){
     const md = createModal(`
       <header><strong>Acceso Panel de Padres</strong><button id="closeX" aria-label="cerrar">✖</button></header>
@@ -505,7 +482,6 @@
       if(e.key === 'Enter') md.querySelector('#parentEnter').click();
     });
   }
-
   function openParentPanel(){
     const modalHtml = `
       <header><strong>Panel de Padres</strong><div style="display:flex;gap:8px"><button id="closePanel" class="btn btn-soft">Cerrar</button></div></header>
@@ -576,7 +552,6 @@
     md.querySelector('#p_reward').value = state.realRewards.length > 0 ? state.realRewards[0] : '';
     renderParentTaskList(md);
   }
-
   function renderParentTaskList(modalEl){
     const container = modalEl.querySelector('#parentTaskList');
     container.innerHTML = '';
@@ -590,8 +565,8 @@
         </div>`;
       container.appendChild(item);
     });
-    container.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', e => {
+    container.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
         const action = btn.dataset.action;
         const idx = Number(btn.dataset.idx);
         if(action === 'del'){
@@ -610,7 +585,6 @@
       });
     });
   }
-
   function openEditInModal(modalEl, idx){
     const t = state.tasks[idx];
     const nameField = modalEl.querySelector('#p_task_name');
@@ -623,37 +597,43 @@
     const handler = () => {
       const name = nameField.value.trim();
       const icon = iconField.value.trim() || '📝';
-      const steps = stepsField.value.trim() ? stepsField.value.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const steps = stepsField.value.trim() ? stepsField.value.split(',').map(s=>s.trim()).filter(Boolean) : [];
       if(!name) return alert('Ingrese nombre');
       t.name = name; t.icon = icon; t.steps = steps; t.completed = false; t.completedSteps = [];
-      saveState();
-      renderParentTaskList(modalEl);
-      renderTaskAt(currentIndex);
-      updateStats();
-      showToast('Tarea editada');
+      saveState(); renderParentTaskList(modalEl); renderTaskAt(currentIndex);
+      updateStats(); showToast('Tarea editada');
       addBtn.textContent = original;
       addBtn.removeEventListener('click', handler);
-      nameField.value = ''; iconField.value = ''; stepsField.value = '';
+      nameField.value=''; iconField.value=''; stepsField.value='';
     };
     addBtn.addEventListener('click', handler);
   }
-
-  function createModal(innerHTML, wide = false){
+  function createModal(innerHTML, wide=false){
     modalRoot.innerHTML = '';
     modalRoot.style.display = 'block';
-    modalRoot.innerHTML = `<div class="modal-backdrop"><div class="modal" style="${wide ? '' : ''}">${innerHTML}</div></div>`;
-    modalRoot.querySelector('.modal-backdrop').addEventListener('click', e => {
+    modalRoot.innerHTML = `<div class="modal-backdrop"><div class="modal" style="${wide? '' : ''}">${innerHTML}</div></div>`;
+    modalRoot.querySelector('.modal-backdrop').addEventListener('click', (e)=>{
       if(e.target === modalRoot.querySelector('.modal-backdrop')) closeModal();
     });
     return modalRoot.querySelector('.modal');
   }
-
-  function closeModal(){
-    modalRoot.innerHTML = '';
-    modalRoot.style.display = 'none';
-  }
-
+  function closeModal(){ modalRoot.innerHTML = ''; modalRoot.style.display='none'; }
   initUI();
 </script>
+<style>
+  @media (max-width: 920px) {
+    .app {
+      grid-template-columns: 1fr !important;
+      justify-items: center;
+    }
+    .task-view.card,
+    aside.side.card {
+      width: 90vw;
+      max-width: 100%;
+      margin: 0 auto;
+      align-items: center;
+    }
+  }
+</style>
 </body>
 </html>

@@ -6,14 +6,14 @@
 <title>CogniKids— Rutina / Panel Padres</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Tu CSS original completamente aquí (igual que antes) */
   :root{
-    /* Paleta pastel */
-    --bg1: #f8fbff; --bg2:#fffaf6;
-    --pastel-blue: #cfeff9; --pastel-mint:#dff6ea; --pastel-lav:#eadcff; --pastel-peach:#fff2e6;
-    --card:#ffffff; --muted:#6b7280;
+    --bg1: #b3d4fe; --bg2:#fffaf6;
+    --pastel-blue: #cfeff9; --pastel-mint:#d7f9e7; --pastel-lav:#dcc4ff; --pastel-peach:#fff2e6;
+    --card:#ffffff; --muted:#32353b;
     --accent:#9ad3ff; --accent-600:#7fc9ff;
-    --radius:14px; --gap:12px; --shadow: 0 8px 24px rgba(16,24,40,0.06);
-    --text:#05263a;
+    --radius:14px; --gap:12px; --shadow: 0 8px 24px rgba(40, 69, 125, 0.06);
+    --text:#084870;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -23,28 +23,20 @@
     color:var(--text); -webkit-font-smoothing:antialiased;
     display:flex; align-items:center; justify-content:center; padding:28px;
   }
-
-  /* App container */
   .app{
     width:100%; max-width:980px; background:transparent; display:grid; grid-template-columns: 1fr 360px; gap:18px;
   }
-
-  /* Header small + gear icon */
   header.app-header{grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px}
   .brand{display:flex;align-items:center;gap:12px}
   .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent-600));display:grid;place-items:center;color:white;font-weight:800}
   .title{line-height:1}
   .title h1{margin:0;font-size:18px}
   .title p{margin:0;font-size:13px;color:var(--muted)}
-
-  /* gear icon */
   .gear{
     width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.9);display:grid;place-items:center;
     box-shadow:var(--shadow); cursor:pointer; border:1px solid rgba(5,38,58,0.04);
   }
   .gear svg{width:20px;height:20px;opacity:0.9}
-
-  /* Welcome card */
   .welcome.card{
     background:linear-gradient(180deg,var(--card), #fbffff);
     border-radius:var(--radius); padding:22px; box-shadow:var(--shadow);
@@ -59,14 +51,11 @@
   }
   .welcome h2{margin:0;font-size:20px}
   .welcome p{margin:0;color:var(--muted)}
-
   .name-row{display:flex; gap:8px; width:100%}
   .name-row input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(5,38,58,0.06);font-size:15px}
   .btn{border:0;padding:10px 12px;border-radius:10px;color:white;cursor:pointer;font-weight:700}
   .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-600)); color:#043047}
   .btn-soft{background:transparent;border:1px solid rgba(4,38,58,0.06); color:var(--text)}
-
-  /* Main task card (one at a time) */
   .task-view.card{
     background:linear-gradient(180deg,#fff,#fffefc); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);
     display:flex; flex-direction:column; gap:12px; min-height:260px; justify-content:center; align-items:center; position:relative;
@@ -81,62 +70,68 @@
   .task-step h3{margin:0 0 8px 0}
   .task-step p{margin:0;color:var(--muted)}
   .task-meta{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px}
-
   .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
   .controls .btn{min-width:110px}
-
-  /* small side panel (stats, badges) */
+  #markDoneBtn{
+    margin-top: 12px;
+  }
   .side.card{
     border-radius:var(--radius); padding:16px; background:linear-gradient(180deg,#ffffff,#fffdfb); box-shadow:var(--shadow);
     display:flex;flex-direction:column;gap:12px; height:fit-content;
   }
   .meter{height:12px;background:#f0f8ff;border-radius:12px;overflow:hidden}
-  .meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#bfeeff,#a7e6ff);transition:width .5s}
-
+  .meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#bfeeff,#a7e6ff);transition:width .6s ease}
   .small{font-size:13px;color:var(--muted)}
-
-  /* Parent panel modal */
+  .reward-block{
+    margin-top:20px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg,#f0feff,#fff7f0);
+    box-shadow: 0 4px 16px rgba(255,169,79,0.3);
+  }
+  .reward-block strong{
+    display:block; margin-bottom: 6px; color: #0b3769;
+  }
+  .reward-text{
+    font-size: 14px; color: #000d55; padding: 6px 8px; border: 1px solid #80dbff; border-radius: 8px;
+    background: #e6fffa;
+    min-height: 40px;
+  }
+  .reward-editable{
+    width: 100%; padding: 8px; font-size: 14px; border-radius: 8px; border: 1px solid #80e6ff;
+    box-sizing: border-box;
+  }
   .modal-backdrop{position:fixed;inset:0;background:rgba(6,12,20,0.35);display:grid;place-items:center;z-index:10000}
   .modal{width:100%;max-width:720px;background:var(--card);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
   .modal header{display:flex;justify-content:space-between;align-items:center}
   .modal .form-row{display:flex;gap:8px;margin-top:8px}
   .modal input, .modal textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(5,38,58,0.06)}
-
-  /* Task list inside parent */
   .task-list-parent{display:flex;flex-direction:column;gap:8px;margin-top:10px}
   .task-item-parent{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:10px;background:#fff; border:1px solid rgba(5,38,58,0.04)}
   .task-item-parent .meta{font-size:13px;color:var(--muted)}
-
-  /* transitions for page changes */
   .page-enter{opacity:0; transform:translateX(12px)}
   .page-enter-active{opacity:1; transform:none; transition: all .38s cubic-bezier(.2,.9,.3,1)}
   .page-exit{opacity:1}
   .page-exit-active{opacity:0; transform:translateX(-12px); transition: all .28s ease}
-
-  /* responsive */
   @media (max-width:920px){ .app{grid-template-columns:1fr; } .gear{position:fixed; right:18px; top:18px; } header.app-header{grid-column:1} }
-
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <header class="app-header">
     <div class="brand">
-      <div class="logo">CK</div>
+      <div class="logo">HR</div>
       <div class="title">
         <h1>CogniKids — Aventura diaria</h1>
         <p class="small">Rutinas simples y recompensas para motivar</p>
       </div>
     </div>
-
-    <!-- gear icon: abre prompt de contraseña + panel padres -->
     <div class="gear" id="openParentBtn" title="Panel de Padres (protegido)">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="#053047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 2.29 17.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09c.67 0 1.21-.3 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 0 1 6.12 2.29l.06.06c.5.5 1.3.65 1.98.36.7-.29 1.1-1 1.1-1.71V3a2 2 0 0 1 4 0v.09c0 .7.4 1.42 1.1 1.71.69.29 1.48.14 1.98-.36l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06c-.5.5-.65 1.3-.36 1.98.29.7 1 1.1 1.71 1.1H21a2 2 0 0 1 0 4h-.09c-.7 0-1.42.4-1.71 1z" stroke="#053047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </header>
 
-  <!-- Left: Welcome / Task view -->
-  <main style="padding:0 0 0 0">
+  <main>
     <section class="welcome card" id="welcomeCard" aria-live="polite">
       <div class="greeting">
         <div class="avatar-hello">✨</div>
@@ -145,26 +140,20 @@
           <p class="small">Escribí tu nombre para comenzar la aventura de hoy.</p>
         </div>
       </div>
-
       <div class="name-row" style="width:100%">
         <input id="nameInput" placeholder="Tu nombre..." aria-label="Nombre del usuario" />
         <button class="btn btn-primary" id="startBtn">Comenzar</button>
       </div>
 
-  
     </section>
 
     <section class="task-view card" id="taskView" style="display:none">
-      <div class="task-card" id="taskCardContainer" aria-live="polite">
-        <!-- Dinámico: tarea actual -->
-      </div>
-
+      <div class="task-card" id="taskCardContainer" aria-live="polite"></div>
+      <button class="btn btn-primary" id="markDoneBtn" disabled>Marcar como completada</button>
       <div class="controls" style="margin-top:6px">
         <button class="btn btn-soft" id="prevTaskBtn">Anterior tarea</button>
         <button class="btn btn-primary" id="nextTaskBtn">Siguiente tarea</button>
-        <button class="btn btn-soft" id="markDoneBtn">Marcar completada</button>
       </div>
-
       <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
         <div class="small">Tareas completadas: <strong id="doneCount">0</strong> / <strong id="totalCount">0</strong></div>
         <div class="small">Puntos: <strong id="points">0</strong> ⭐</div>
@@ -172,368 +161,499 @@
     </section>
   </main>
 
-  <!-- Right: Side panel -->
   <aside class="side card">
     <div>
       <strong>Progreso</strong>
       <div class="small">Avance de hoy</div>
       <div style="margin-top:10px" class="meter"><div id="meterFill" class="meter-fill"></div></div>
     </div>
-
     <div>
       <strong>Próxima tarea</strong>
       <div id="nextPreview" class="small">—</div>
     </div>
 
-
+    <div class="reward-block">
+      <strong>Tu recompensa</strong>
+      <div id="rewardText" class="reward-text" aria-label="Texto de recompensa"></div>
+    </div>
   </aside>
+
 </div>
 
-<!-- Parent modal (hidden) -->
 <div id="modalRoot" style="display:none"></div>
 
 <script>
-/* ---------- Estado + LocalStorage ---------- */
-const STORAGE_KEY = 'heroroutine_spa_v1';
-let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-  userName: '',
-  points: 0,
-  tasks: [
-    { id: 1, icon:'🪥', name:'Cepillarse los dientes', steps:['Poner pasta','Cepillar 2 min','Enjuagar'], completed:false, completedSteps:[] },
-    { id: 2, icon:'🎒', name:'Preparar mochila', steps:['Revisar cuadernos','Poner lonchera'], completed:false, completedSteps:[] },
-    { id: 3, icon:'🧸', name:'Guardar juguetes', steps:['Recoger piezas','Guardar en caja'], completed:false, completedSteps:[] }
-  ],
-  realRewards: []
-};
-function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  // Borra datos previos guardados al iniciar para prueba limpia
+  localStorage.removeItem('heroroutine_spa_v1');
 
-/* ---------- DOM Refs ---------- */
-const welcomeCard = document.getElementById('welcomeCard');
-const nameInput = document.getElementById('nameInput');
-const startBtn = document.getElementById('startBtn');
-const taskView = document.getElementById('taskView');
-const taskCardContainer = document.getElementById('taskCardContainer');
-const prevTaskBtn = document.getElementById('prevTaskBtn');
-const nextTaskBtn = document.getElementById('nextTaskBtn');
-const markDoneBtn = document.getElementById('markDoneBtn');
-const doneCountEl = document.getElementById('doneCount');
-const totalCountEl = document.getElementById('totalCount');
-const pointsEl = document.getElementById('points');
-const meterFill = document.getElementById('meterFill');
-const nextPreview = document.getElementById('nextPreview');
-const openParentBtn = document.getElementById('openParentBtn');
-const modalRoot = document.getElementById('modalRoot');
+  const STORAGE_KEY = 'heroroutine_spa_v1';
+  let state = {
+    userName: '',
+    points: 0,
+    tasks: [
+      { id: 1, icon:'🪥', name:'Cepillarse los dientes', steps:['Poner pasta','Cepillar 2 min','Enjuagar'], completed:false, completedSteps:[] },
+      { id: 2, icon:'🎒', name:'Preparar mochila', steps:['Revisar cuadernos','Poner lonchera'], completed:false, completedSteps:[] },
+      { id: 3, icon:'🧸', name:'Guardar juguetes', steps:['Recoger piezas','Guardar en caja'], completed:false, completedSteps:[] }
+    ],
+    realRewards: ["Una salida al parque"],
+    pointsAwardedTasks: [],
+  };
 
-/* ---------- App flow ---------- */
-let currentIndex = 0; // index of visible task in state.tasks
+  const welcomeCard = document.getElementById('welcomeCard');
+  const nameInput = document.getElementById('nameInput');
+  const startBtn = document.getElementById('startBtn');
+  const taskView = document.getElementById('taskView');
+  const taskCardContainer = document.getElementById('taskCardContainer');
+  const prevTaskBtn = document.getElementById('prevTaskBtn');
+  const nextTaskBtn = document.getElementById('nextTaskBtn');
+  const doneCountEl = document.getElementById('doneCount');
+  const totalCountEl = document.getElementById('totalCount');
+  const pointsEl = document.getElementById('points');
+  const meterFill = document.getElementById('meterFill');
+  const nextPreview = document.getElementById('nextPreview');
+  const openParentBtn = document.getElementById('openParentBtn');
+  const modalRoot = document.getElementById('modalRoot');
+  const rewardTextEl = document.getElementById('rewardText');
+  const markDoneBtn = document.getElementById('markDoneBtn');
 
-function initUI(){
-  // Load user name
-  if(state.userName){
-    nameInput.value = state.userName;
-    showWelcomeGreeting(state.userName);
+  let currentIndex = 0;
+
+  // Función para guardar el estado en localStorage
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
-  updateStats();
-  renderTaskAt(currentIndex);
-  updateNextPreview();
-}
-function showWelcomeGreeting(name){
-  const title = document.getElementById('welcomeTitle');
-  title.textContent = `Hola, ${name} 👋 ¿Estás listo para tus tareas de hoy?`;
-}
 
-startBtn.addEventListener('click', ()=>{
-  const name = nameInput.value.trim() || 'Amigo';
-  state.userName = name;
-  saveState();
-  showWelcomeGreeting(name);
-
-  // animación de transición: ocultar welcome -> mostrar taskView
-  welcomeCard.style.transition = 'opacity .35s';
-  welcomeCard.style.opacity = 0;
-  setTimeout(()=>{ welcomeCard.style.display='none'; taskView.style.display='block'; taskView.style.opacity=0;
-    setTimeout(()=>{ taskView.style.transition='opacity .38s'; taskView.style.opacity=1; }, 40);
-    renderTaskAt(0);
-  }, 380);
-});
-
-function updateStats(){
-  const total = state.tasks.length;
-  const done = state.tasks.filter(t=>t.completed).length;
-  doneCountEl.textContent = done;
-  totalCountEl.textContent = total;
-  pointsEl.textContent = state.points;
-  const percent = total ? Math.round((done/total)*100) : 0;
-  meterFill.style.width = percent + '%';
-}
-
-function renderTaskAt(index){
-  if(state.tasks.length === 0){
-    taskCardContainer.innerHTML = `<div class="task-step"><h3>No hay tareas</h3><p>Pedile a mamá o papá que agregue tareas desde el panel de padres.</p></div>`;
-    nextPreview.textContent = '—';
+  function initUI(){
+    if(state.userName !== ''){
+      nameInput.value = state.userName;
+    }
+    showWelcomeGreeting(state.userName || '');
     updateStats();
-    return;
-  }
-  if(index < 0) index = 0;
-  if(index >= state.tasks.length) index = state.tasks.length - 1;
-  currentIndex = index;
-  const t = state.tasks[currentIndex];
-
-  // create card
-  taskCardContainer.innerHTML = '';
-  const el = document.createElement('div');
-  el.className = 'task-step page-enter-active';
-  el.innerHTML = `
-    <div style="font-size:36px">${t.icon || '⭐'}</div>
-    <h3>${t.name}</h3>
-    <div class="small" style="margin-top:8px">${t.steps && t.steps.length>0 ? (t.steps.length + ' pasos') : 'Sin pasos'}</div>
-    <div style="margin-top:12px; width:100%"></div>
-  `;
-
-  // steps list
-  if(t.steps && t.steps.length>0){
-    const list = document.createElement('div');
-    list.style.display='flex'; list.style.flexDirection='column'; list.style.gap='8px'; list.style.marginTop='12px'; list.style.width='100%';
-    t.steps.forEach((s, i)=>{
-      const row = document.createElement('label');
-      row.style.display='flex'; row.style.alignItems='center'; row.style.justifyContent='flex-start'; row.style.gap='10px';
-      row.style.background = 'linear-gradient(90deg,#fff,#fbfbff)'; row.style.padding='8px'; row.style.borderRadius='8px';
-      const cb = document.createElement('input'); cb.type='checkbox'; cb.checked = t.completedSteps && t.completedSteps.includes(i);
-      cb.addEventListener('change', ()=>{
-        if(cb.checked) {
-          t.completedSteps = Array.from(new Set([...(t.completedSteps||[]), i]));
-          showToast('Paso completado');
-        } else {
-          t.completedSteps = (t.completedSteps||[]).filter(x=>x!==i);
-        }
-        saveState(); renderTaskAt(currentIndex); updateStats(); updateNextPreview();
-      });
-      const txt = document.createElement('div'); txt.textContent = s; txt.style.flex='1';
-      row.appendChild(cb); row.appendChild(txt);
-      list.appendChild(row);
-    });
-    el.appendChild(list);
+    renderTaskAt(currentIndex);
+    updateNextPreview();
+    renderRewardText();
   }
 
-  // status & hint
-  const hint = document.createElement('div');
-  hint.className = 'small';
-  const completedSteps = t.completedSteps ? t.completedSteps.length : 0;
-  if(t.completed){
-    hint.textContent = 'Tarea completada ✅';
-  } else if(t.steps && t.steps.length>0 && completedSteps === t.steps.length){
-    hint.textContent = 'Todos los pasos listos. Podés marcar la tarea como completada.';
-  } else if(t.steps && t.steps.length>0){
-    hint.textContent = `Pasos completados: ${completedSteps} / ${t.steps.length}`;
-  } else {
-    hint.textContent = 'Tarea sin pasos. Podés marcarla como completada.';
+  // Mostrar saludo de bienvenida
+  function showWelcomeGreeting(name){
+    const title = document.getElementById('welcomeTitle');
+    title.textContent = `Hola, ${name} 👋 ¿Estás listo para tus tareas de hoy?`;
   }
-  el.appendChild(hint);
 
-  taskCardContainer.appendChild(el);
-  updateControls();
-  updateNextPreview();
-}
-
-function updateControls(){
-  prevTaskBtn.disabled = currentIndex === 0;
-  nextTaskBtn.disabled = currentIndex >= state.tasks.length - 1;
-  const t = state.tasks[currentIndex];
-  markDoneBtn.disabled = t ? t.completed : true;
-}
-
-prevTaskBtn.addEventListener('click', ()=>{
-  if(currentIndex > 0){ renderTaskAt(currentIndex - 1); }
-});
-
-nextTaskBtn.addEventListener('click', ()=>{
-  if(currentIndex < state.tasks.length - 1){
-    renderTaskAt(currentIndex + 1);
-  } else {
-    // end reached
-    showToast('No hay más tareas por ahora');
-  }
-});
-
-markDoneBtn.addEventListener('click', ()=>{
-  const t = state.tasks[currentIndex];
-  if(!t) return;
-  // if has steps, ensure completed
-  if(t.steps && t.steps.length>0 && (t.completedSteps || []).length !== t.steps.length){
-    showToast('Primero completá todos los pasos');
-    return;
-  }
-  if(!t.completed){
-    t.completed = true;
-    state.points += 10;
+  // Evento click del botón Comenzar
+  startBtn.addEventListener('click', () => {
+    let name = nameInput.value.trim();
+    if(name === '') name = 'Amigo';
+    state.userName = name;
     saveState();
+    showWelcomeGreeting(name);
+    welcomeCard.style.transition = 'opacity .35s';
+    welcomeCard.style.opacity = 0;
+    setTimeout(() => {
+      welcomeCard.style.display = 'none';
+      taskView.style.display = 'block';
+      taskView.style.opacity = 0;
+      setTimeout(() => {
+        taskView.style.transition = 'opacity .38s';
+        taskView.style.opacity = 1;
+      }, 40);
+      renderTaskAt(0);
+    }, 380);
+  });
+
+  // Navegar a tarea anterior
+  prevTaskBtn.addEventListener('click', () => {
+    if(currentIndex > 0) renderTaskAt(currentIndex - 1);
+  });
+
+  // Navegar a tarea siguiente
+  nextTaskBtn.addEventListener('click', () => {
+    const t = state.tasks[currentIndex];
+    if(!t) return;
+    if(t.steps && t.steps.length > 0 && (t.completedSteps||[]).length !== t.steps.length){
+      showToast('Primero completá todos los pasos');
+      return;
+    }
+    if(!t.completed){
+      if(!state.pointsAwardedTasks.includes(t.id)){
+        state.points += 10;
+        state.pointsAwardedTasks.push(t.id);
+        showFloatingStars('+10 ⭐', taskCardContainer);
+      }
+      t.completed = true;
+    }
+    saveState();
+    updateStats();
+    renderTaskAt(Math.min(currentIndex+1, state.tasks.length-1));
+  });
+
+  // Marcar tarea como completada
+  markDoneBtn.addEventListener('click', () => {
+    const t = state.tasks[currentIndex];
+    if(!t) return;
+    if(t.steps && t.steps.length > 0 && (t.completedSteps||[]).length !== t.steps.length){
+      showToast('Primero completá todos los pasos');
+      return;
+    }
+    if(!t.completed){
+      if(!state.pointsAwardedTasks.includes(t.id)){
+        state.points += 10;
+        state.pointsAwardedTasks.push(t.id);
+        showFloatingStars('+10 ⭐', taskCardContainer);
+      }
+      t.completed = true;
+    }
+    saveState(); 
     showToast('Tarea completada +10 ⭐');
     updateStats();
     renderTaskAt(currentIndex);
-    // auto-move to next after short delay
-    setTimeout(()=>{ if(currentIndex < state.tasks.length - 1) renderTaskAt(currentIndex + 1); }, 700);
+    setTimeout(()=>{
+      if(currentIndex < state.tasks.length - 1) renderTaskAt(currentIndex + 1);
+    }, 700);
+  });
+
+  // Renderizado y lógica de tareas, pasos y checkboxes
+  function renderTaskAt(index){
+    if(state.tasks.length === 0){
+      taskCardContainer.innerHTML = `<div class="task-step"><h3>No hay tareas</h3><p>Pedile a mamá o papá que agregue tareas desde el panel de padres.</p></div>`;
+      nextPreview.textContent = '—'; 
+      updateStats(); 
+      return;
+    }
+    if(index < 0) index = 0;
+    if(index >= state.tasks.length) index = state.tasks.length - 1;
+    currentIndex = index;
+    const t = state.tasks[currentIndex];
+    taskCardContainer.innerHTML = '';
+    const el = document.createElement('div');
+    el.className = 'task-step page-enter-active';
+    el.innerHTML = `
+      <div style="font-size:36px">${t.icon || '⭐'}</div>
+      <h3>${t.name}</h3>
+      <div class="small" style="margin-top:8px">${t.steps && t.steps.length>0 ? (t.steps.length + ' pasos') : 'Sin pasos'}</div>
+      <div style="margin-top:12px; width:100%"></div>
+    `;
+    if(t.steps && t.steps.length > 0){
+      const list = document.createElement('div');
+      list.style.display='flex'; 
+      list.style.flexDirection='column'; 
+      list.style.gap='8px'; 
+      list.style.marginTop='12px'; 
+      list.style.width='100%';
+      t.steps.forEach((s, i) => {
+        const row = document.createElement('label');
+        row.style.display='flex'; 
+        row.style.alignItems='center'; 
+        row.style.gap='10px'; 
+        row.style.background = 'linear-gradient(90deg,#fff,#fbfbff)'; 
+        row.style.padding='8px'; 
+        row.style.borderRadius='8px';
+        const cb = document.createElement('input');
+        cb.type='checkbox';
+        cb.checked = t.completedSteps.includes(i);
+        cb.addEventListener('change', ()=>{
+          if(cb.checked) {
+            if(!t.completedSteps.includes(i)) t.completedSteps.push(i);
+            showToast('Paso completado');
+          } else {
+            t.completedSteps = t.completedSteps.filter(x=>x!==i);
+          }
+          if(t.completedSteps.length === t.steps.length && !t.completed){
+            if(!state.pointsAwardedTasks.includes(t.id)){
+              state.points += 10;
+              state.pointsAwardedTasks.push(t.id);
+              showFloatingStars('+10 ⭐', taskCardContainer);
+            }
+            t.completed = true;
+            updateControls();
+          } else if(t.completed && t.completedSteps.length !== t.steps.length){
+            t.completed = false;
+            const idx = state.pointsAwardedTasks.indexOf(t.id);
+            if(idx !== -1){
+              state.pointsAwardedTasks.splice(idx,1);
+              state.points -= 10;
+            }
+            updateControls();
+          }
+          saveState();
+          updateStats();
+          renderTaskAt(currentIndex);
+          updateNextPreview();
+        });
+        const txt = document.createElement('div');
+        txt.textContent = s;
+        txt.style.flex = '1';
+        row.appendChild(cb);
+        row.appendChild(txt);
+        list.appendChild(row);
+      });
+      el.appendChild(list);
+    }
+    const hint = document.createElement('div');
+    hint.className = 'small';
+    const completedSteps = t.completedSteps ? t.completedSteps.length : 0;
+    if(t.completed){
+      hint.textContent = 'Tarea completada ✅';
+    } else if(t.steps && t.steps.length > 0 && completedSteps === t.steps.length){
+      hint.textContent = 'Todos los pasos listos.';
+    } else if(t.steps && t.steps.length > 0){
+      hint.textContent = `Pasos completados: ${completedSteps} / ${t.steps.length}`;
+    } else {
+      hint.textContent = 'Tarea sin pasos.';
+    }
+    el.appendChild(hint);
+    taskCardContainer.appendChild(el);
+    updateControls();
+    updateNextPreview();
   }
-});
 
-/* ---------- Parent panel (modal + password) ---------- */
-const PARENT_PASS = 'admin123';
-openParentBtn.addEventListener('click', ()=> openPasswordPrompt());
+  function updateControls(){
+    prevTaskBtn.disabled = currentIndex === 0;
+    nextTaskBtn.disabled = currentIndex >= state.tasks.length - 1;
+    const t = state.tasks[currentIndex];
+    markDoneBtn.disabled = !t || t.completed;
+  }
 
-function openPasswordPrompt(){
-  const md = createModal(`
-    <header><strong>Acceso Panel de Padres</strong><button id="closeX" aria-label="cerrar">✖</button></header>
-    <div style="margin-top:12px">
-      <p class="small">Ingresá la contraseña para acceder y administrar tareas.</p>
-      <div class="form-row" style="margin-top:8px">
-        <input id="parentPass" placeholder="Contraseña" type="password" />
-        <button class="btn btn-primary" id="parentEnter">Entrar</button>
+  function updateStats(){
+    const total = state.tasks.length;
+    const done = state.tasks.filter(t=>t.completed).length;
+    doneCountEl.textContent = done;
+    totalCountEl.textContent = total;
+    pointsEl.textContent = state.points;
+    const percent = total ? Math.round((done/total)*100) : 0;
+    meterFill.style.transition = 'width 0.6s ease';
+    meterFill.style.width = percent + '%';
+  }
+
+  function updateNextPreview(){
+    if(state.tasks.length === 0){ nextPreview.textContent = '—'; return; }
+    const idx = Math.min(currentIndex+1, state.tasks.length-1);
+    const next = state.tasks[idx];
+    nextPreview.textContent = next ? `${next.icon || ''} ${next.name}` : '—';
+    updateStats();
+  }
+
+  function showFloatingStars(text, container){
+    const star = document.createElement('div');
+    star.textContent = text;
+    star.style.position = 'absolute';
+    star.style.left = '50%';
+    star.style.top = '50%';
+    star.style.transform = 'translate(-50%, -50%)';
+    star.style.fontSize = '24px';
+    star.style.fontWeight = '700';
+    star.style.color = '#FFD700';
+    star.style.opacity = 1;
+    star.style.pointerEvents = 'none';
+    star.style.transition = 'all 1s ease-out';
+    container.appendChild(star);
+    setTimeout(()=>{
+      star.style.transform = 'translate(-50%, -120%)';
+      star.style.opacity = 0;
+    }, 20);
+    setTimeout(()=> star.remove(), 1000);
+  }
+
+  function showToast(msg){
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.position='fixed';
+    t.style.left='50%';
+    t.style.transform='translateX(-50%)';
+    t.style.top = '20px';
+    t.style.padding='10px 14px';
+    t.style.background = 'linear-gradient(90deg,#ffd6a5,#ffd6a5)';
+    t.style.borderRadius='10px';
+    t.style.boxShadow = '0 8px 24px rgba(12,20,30,0.08)';
+    t.style.zIndex = 12000;
+    document.body.appendChild(t);
+    setTimeout(()=>{
+      t.style.transition = 'opacity .45s';
+      t.style.opacity = 0;
+      setTimeout(()=> t.remove(), 450);
+    }, 1600);
+  }
+
+  function renderRewardText(){
+    rewardTextEl.textContent = state.realRewards.length > 0 ? state.realRewards[0] : '(No hay recompensa definida)';
+  }
+
+  openParentBtn.addEventListener('click', ()=> openPasswordPrompt());
+
+  function openPasswordPrompt(){
+    const md = createModal(`
+      <header><strong>Acceso Panel de Padres</strong><button id="closeX" aria-label="cerrar">✖</button></header>
+      <div style="margin-top:12px">
+        <p class="small">Ingresá la contraseña para acceder y administrar tareas y recompensas.</p>
+        <div class="form-row" style="margin-top:8px">
+          <input id="parentPass" placeholder="Contraseña" type="password" />
+          <button class="btn btn-primary" id="parentEnter">Entrar</button>
+        </div>
       </div>
-    </div>
-  `);
-  md.querySelector('#closeX').addEventListener('click', ()=> closeModal());
-  md.querySelector('#parentEnter').addEventListener('click', ()=>{
-    const val = md.querySelector('#parentPass').value;
-    if(val === PARENT_PASS){ closeModal(); openParentPanel(); } else { alert('Contraseña incorrecta'); }
-  });
-  md.querySelector('#parentPass').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') md.querySelector('#parentEnter').click(); });
-}
-
-function openParentPanel(){
-  const modalHtml = `
-    <header><strong>Panel de Padres</strong><div style="display:flex;gap:8px"><button id="closePanel" class="btn btn-soft">Cerrar</button></div></header>
-    <div style="margin-top:10px; display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-      <div>
-        <label class="small">Nombre tarea</label>
-        <input id="p_task_name" placeholder="Ej: Cepillarse los dientes" />
-      </div>
-      <div>
-        <label class="small">Emoji / Ícono</label>
-        <input id="p_task_icon" placeholder="🪥" maxlength="3" />
-      </div>
-      <div style="grid-column:1/-1">
-        <label class="small">Pasos (separados por coma)</label>
-        <textarea id="p_task_steps" rows="2" placeholder="Poner pasta, Cepillar, Enjuagar"></textarea>
-      </div>
-      <div style="grid-column:1/-1; display:flex; gap:8px; justify-content:flex-start;">
-        <button id="p_add" class="btn btn-primary">Agregar tarea</button>
-        <button id="p_save" class="btn btn-soft">Guardar cambios</button>
-      </div>
-    </div>
-
-    <div style="margin-top:12px">
-      <h3>Tareas actuales</h3>
-      <div class="task-list-parent" id="parentTaskList"></div>
-    </div>
-  `;
-  const md = createModal(modalHtml, true);
-
-  md.querySelector('#closePanel').addEventListener('click', ()=> closeModal());
-  md.querySelector('#p_add').addEventListener('click', ()=>{
-    const name = md.querySelector('#p_task_name').value.trim();
-    const icon = md.querySelector('#p_task_icon').value.trim() || '📝';
-    const stepsRaw = md.querySelector('#p_task_steps').value.trim();
-    const steps = stepsRaw ? stepsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
-    if(!name) return alert('Ingrese nombre de tarea');
-    const newTask = { id: Date.now(), icon, name, steps, completed:false, completedSteps:[] };
-    state.tasks.push(newTask);
-    saveState(); renderParentTaskList(md); renderTaskAt(currentIndex); updateStats(); showToast('Tarea agregada');
-    md.querySelector('#p_task_name').value=''; md.querySelector('#p_task_icon').value=''; md.querySelector('#p_task_steps').value='';
-  });
-
-  md.querySelector('#p_save').addEventListener('click', ()=>{
-    saveState(); renderParentTaskList(md); showToast('Cambios guardados');
-  });
-
-  renderParentTaskList(md);
-}
-
-function renderParentTaskList(modalEl){
-  const container = modalEl.querySelector('#parentTaskList');
-  container.innerHTML = '';
-  state.tasks.forEach((t, idx)=>{
-    const item = document.createElement('div');
-    item.className = 'task-item-parent';
-    item.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="font-size:20px">${t.icon || '⭐'}</div><div><div style="font-weight:700">${t.name}</div><div class="meta">${t.steps? t.steps.length + ' pasos' : 'Sin pasos'}</div></div></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-soft" data-action="edit" data-idx="${idx}">Editar</button>
-        <button class="btn btn-soft" data-action="del" data-idx="${idx}" style="color:#c23">Eliminar</button>
-      </div>`;
-    container.appendChild(item);
-  });
-  container.querySelectorAll('button').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      const action = btn.dataset.action;
-      const idx = Number(btn.dataset.idx);
-      if(action === 'del'){
-        if(confirm('Eliminar tarea?')){ state.tasks.splice(idx,1); saveState(); renderParentTaskList(modalEl); renderTaskAt(Math.min(currentIndex, state.tasks.length-1)); updateStats(); showToast('Tarea eliminada'); }
-      } else if(action === 'edit'){
-        openEditInModal(modalEl, idx);
+    `);
+    md.querySelector('#closeX').addEventListener('click', ()=> closeModal());
+    md.querySelector('#parentEnter').addEventListener('click', ()=>{
+      const val = md.querySelector('#parentPass').value;
+      if(val === 'admin123'){
+        closeModal();
+        openParentPanel();
+      } else {
+        alert('Contraseña incorrecta');
       }
     });
-  });
-}
+    md.querySelector('#parentPass').addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter') md.querySelector('#parentEnter').click();
+    });
+  }
 
-function openEditInModal(modalEl, idx){
-  const t = state.tasks[idx];
-  const nameField = modalEl.querySelector('#p_task_name');
-  const iconField = modalEl.querySelector('#p_task_icon');
-  const stepsField = modalEl.querySelector('#p_task_steps');
-  nameField.value = t.name; iconField.value = t.icon; stepsField.value = (t.steps || []).join(', ');
-  // change add button to save edit temporarily
-  const addBtn = modalEl.querySelector('#p_add');
-  const original = addBtn.textContent;
-  addBtn.textContent = 'Guardar edición';
-  const handler = ()=>{
-    const name = nameField.value.trim(); const icon = iconField.value.trim() || '📝';
-    const steps = stepsField.value.trim() ? stepsField.value.split(',').map(s=>s.trim()).filter(Boolean) : [];
-    if(!name) return alert('Ingrese nombre');
-    t.name = name; t.icon = icon; t.steps = steps; t.completed = false; t.completedSteps = [];
-    saveState(); renderParentTaskList(modalEl); renderTaskAt(currentIndex); updateStats(); showToast('Tarea editada');
-    // restore add button
-    addBtn.textContent = original;
-    addBtn.removeEventListener('click', handler);
-    nameField.value=''; iconField.value=''; stepsField.value='';
-  };
-  addBtn.addEventListener('click', handler);
-}
+  function openParentPanel(){
+    const modalHtml = `
+      <header><strong>Panel de Padres</strong><div style="display:flex;gap:8px"><button id="closePanel" class="btn btn-soft">Cerrar</button></div></header>
+      <div style="margin-top:10px; display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div>
+          <label class="small">Nombre tarea</label>
+          <input id="p_task_name" placeholder="Ej: Cepillarse los dientes" />
+        </div>
+        <div>
+          <label class="small">Emoji / Ícono</label>
+          <input id="p_task_icon" placeholder="🪥" maxlength="3" />
+        </div>
+        <div style="grid-column:1/-1">
+          <label class="small">Pasos (separados por coma)</label>
+          <textarea id="p_task_steps" rows="2" placeholder="Poner pasta, Cepillar, Enjuagar"></textarea>
+        </div>
+        <div style="grid-column:1/-1; display:flex; gap:8px; justify-content:flex-start;">
+          <button id="p_add" class="btn btn-primary">Agregar tarea</button>
+          <button id="p_save" class="btn btn-soft">Guardar cambios</button>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <h3>Tareas actuales</h3>
+        <div class="task-list-parent" id="parentTaskList"></div>
+      </div>
+      <hr style="margin:20px 0; border:none; border-top:1px solid rgba(5,38,58,0.1);"/>
+      <div>
+        <label class="small"><strong>Editar recompensa real</strong></label>
+        <textarea id="p_reward" rows="2" placeholder="Ejemplo: Una salida al parque" class="reward-editable"></textarea>
+        <button id="p_reward_save" class="btn btn-primary" style="margin-top:8px;">Guardar recompensa</button>
+      </div>
+    `;
+    const md = createModal(modalHtml, true);
+    md.querySelector('#closePanel').addEventListener('click', ()=> closeModal());
+    md.querySelector('#p_add').addEventListener('click', () => {
+      const name = md.querySelector('#p_task_name').value.trim();
+      const icon = md.querySelector('#p_task_icon').value.trim() || '📝';
+      const stepsRaw = md.querySelector('#p_task_steps').value.trim();
+      const steps = stepsRaw ? stepsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      if (!name) return alert('Ingrese nombre de tarea');
+      const newTask = { id: Date.now(), icon, name, steps, completed: false, completedSteps: [] };
+      state.tasks.push(newTask);
+      saveState();
+      renderParentTaskList(md);
+      renderTaskAt(currentIndex);
+      updateStats();
+      showToast('Tarea agregada');
+      md.querySelector('#p_task_name').value='';
+      md.querySelector('#p_task_icon').value='';
+      md.querySelector('#p_task_steps').value='';
+    });
+    md.querySelector('#p_save').addEventListener('click', () => {
+      saveState();
+      renderParentTaskList(md);
+      showToast('Cambios guardados');
+    });
+    md.querySelector('#p_reward_save').addEventListener('click', () => {
+      const rewardText = md.querySelector('#p_reward').value.trim();
+      if (rewardText.length === 0) {
+        alert("La recompensa no puede estar vacía.");
+        return;
+      }
+      state.realRewards = [rewardText];
+      saveState();
+      renderRewardText();
+      showToast("Recompensa guardada");
+    });
+    md.querySelector('#p_reward').value = state.realRewards.length > 0 ? state.realRewards[0] : '';
+    renderParentTaskList(md);
+  }
 
-/* ---------- Modal helpers ---------- */
-function createModal(innerHTML, wide=false){
-  modalRoot.innerHTML = '';
-  modalRoot.style.display = 'block';
-  modalRoot.innerHTML = `<div class="modal-backdrop"><div class="modal" style="${wide? '' : ''}">${innerHTML}</div></div>`;
-  // close when backdrop clicked outside modal
-  modalRoot.querySelector('.modal-backdrop').addEventListener('click', (e)=>{
-    if(e.target === modalRoot.querySelector('.modal-backdrop')) closeModal();
-  });
-  return modalRoot.querySelector('.modal');
-}
-function closeModal(){ modalRoot.innerHTML = ''; modalRoot.style.display='none'; }
+  function renderParentTaskList(modalEl){
+    const container = modalEl.querySelector('#parentTaskList');
+    container.innerHTML = '';
+    state.tasks.forEach((t, idx) => {
+      const item = document.createElement('div');
+      item.className = 'task-item-parent';
+      item.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="font-size:20px">${t.icon || '⭐'}</div><div><div style="font-weight:700">${t.name}</div><div class="meta">${t.steps? t.steps.length + ' pasos' : 'Sin pasos'}</div></div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-soft" data-action="edit" data-idx="${idx}">Editar</button>
+          <button class="btn btn-soft" data-action="del" data-idx="${idx}" style="color:#c23">Eliminar</button>
+        </div>`;
+      container.appendChild(item);
+    });
+    container.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const action = btn.dataset.action;
+        const idx = Number(btn.dataset.idx);
+        if(action === 'del'){
+          if(confirm('Eliminar tarea?')){
+            state.tasks.splice(idx,1);
+            saveState();
+            renderParentTaskList(modalEl);
+            renderTaskAt(Math.min(currentIndex, state.tasks.length-1));
+            updateStats();
+            showToast('Tarea eliminada');
+          }
+        }
+        else if(action === 'edit'){
+          openEditInModal(modalEl, idx);
+        }
+      });
+    });
+  }
 
-/* ---------- Small toast (notification) ---------- */
-function showToast(msg){
-  // lightweight: small floating element
-  const t = document.createElement('div');
-  t.textContent = msg;
-  t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)';
-  t.style.top = '20px'; t.style.padding='10px 14px'; t.style.background = 'linear-gradient(90deg,#ffd6a5,#ffd6a5)'; t.style.borderRadius='10px'; t.style.boxShadow = '0 8px 24px rgba(12,20,30,0.08)'; t.style.zIndex = 12000;
-  document.body.appendChild(t);
-  setTimeout(()=>{ t.style.transition = 'opacity .45s'; t.style.opacity = 0; setTimeout(()=> t.remove(), 450); }, 1600);
-}
+  function openEditInModal(modalEl, idx){
+    const t = state.tasks[idx];
+    const nameField = modalEl.querySelector('#p_task_name');
+    const iconField = modalEl.querySelector('#p_task_icon');
+    const stepsField = modalEl.querySelector('#p_task_steps');
+    nameField.value = t.name; iconField.value = t.icon; stepsField.value = (t.steps || []).join(', ');
+    const addBtn = modalEl.querySelector('#p_add');
+    const original = addBtn.textContent;
+    addBtn.textContent = 'Guardar edición';
+    const handler = () => {
+      const name = nameField.value.trim();
+      const icon = iconField.value.trim() || '📝';
+      const steps = stepsField.value.trim() ? stepsField.value.split(',').map(s => s.trim()).filter(Boolean) : [];
+      if(!name) return alert('Ingrese nombre');
+      t.name = name; t.icon = icon; t.steps = steps; t.completed = false; t.completedSteps = [];
+      saveState();
+      renderParentTaskList(modalEl);
+      renderTaskAt(currentIndex);
+      updateStats();
+      showToast('Tarea editada');
+      addBtn.textContent = original;
+      addBtn.removeEventListener('click', handler);
+      nameField.value = ''; iconField.value = ''; stepsField.value = '';
+    };
+    addBtn.addEventListener('click', handler);
+  }
 
-/* ---------- Helpers ---------- */
-function updateNextPreview(){
-  if(state.tasks.length === 0){ nextPreview.textContent = '—'; return; }
-  const idx = Math.min(currentIndex+1, state.tasks.length-1);
-  const next = state.tasks[idx];
-  nextPreview.textContent = next ? `${next.icon || ''} ${next.name}` : '—';
-  updateStats();
-}
+  function createModal(innerHTML, wide = false){
+    modalRoot.innerHTML = '';
+    modalRoot.style.display = 'block';
+    modalRoot.innerHTML = `<div class="modal-backdrop"><div class="modal" style="${wide ? '' : ''}">${innerHTML}</div></div>`;
+    modalRoot.querySelector('.modal-backdrop').addEventListener('click', e => {
+      if(e.target === modalRoot.querySelector('.modal-backdrop')) closeModal();
+    });
+    return modalRoot.querySelector('.modal');
+  }
 
-/* ---------- Init ---------- */
-initUI();
+  function closeModal(){
+    modalRoot.innerHTML = '';
+    modalRoot.style.display = 'none';
+  }
 
+  initUI();
 </script>
 </body>
 </html>
-<

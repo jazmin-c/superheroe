@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CogniKids— Rutina / Panel Padres</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg1: #b3d4fe; --bg2:#fffaf6;
@@ -23,9 +23,12 @@
     display:flex; align-items:center; justify-content:center; padding:28px;
   }
   .app{
-    width:100%; max-width:980px; background:transparent; display:grid; grid-template-columns: 1fr 360px; gap:18px;
+    max-width:720px;
+    width:100%;
   }
-  header.app-header{grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px}
+  header.app-header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px;
+  }
   .brand{display:flex;align-items:center;gap:12px}
   .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent-600));display:grid;place-items:center;color:white;font-weight:800}
   .title{line-height:1}
@@ -40,7 +43,7 @@
     background:linear-gradient(180deg,var(--card), #fbffff);
     border-radius:var(--radius); padding:22px; box-shadow:var(--shadow);
     display:flex; flex-direction:column; gap:12px; align-items:flex-start;
-    overflow:hidden; position:relative;
+    overflow:hidden; position:relative; margin-bottom:20px;
   }
   .greeting{
     width:100%; display:flex; gap:12px; align-items:center;
@@ -76,7 +79,8 @@
   }
   .side.card{
     border-radius:var(--radius); padding:16px; background:linear-gradient(180deg,#ffffff,#fffdfb); box-shadow:var(--shadow);
-    display:flex;flex-direction:column;gap:12px; height:fit-content; width: 100%; max-width: 360px;
+    display:flex;flex-direction:column;gap:12px; height:fit-content; margin-top:24px;
+    width: 100%;
   }
   .meter{height:12px;background:#f0f8ff;border-radius:12px;overflow:hidden}
   .meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#bfeeff,#a7e6ff);transition:width .6s ease}
@@ -112,19 +116,6 @@
   .page-enter-active{opacity:1; transform:none; transition: all .38s cubic-bezier(.2,.9,.3,1)}
   .page-exit{opacity:1}
   .page-exit-active{opacity:0; transform:translateX(-12px); transition: all .28s ease}
-  @media (max-width:920px){
-    .app{
-      grid-template-columns: 1fr !important;
-      justify-items: center;
-    }
-    .task-view.card,
-    aside.side.card{
-      width: 90vw;
-      max-width: 100%;
-      margin: 0 auto;
-      align-items: center;
-    }
-  }
 </style>
 </head>
 <body>
@@ -141,6 +132,7 @@
       <svg viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="#053047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 2.29 17.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09c.67 0 1.21-.3 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 0 1 6.12 2.29l.06.06c.5.5 1.3.65 1.98.36.7-.29 1.1-1 1.1-1.71V3a2 2 0 0 1 4 0v.09c0 .7.4 1.42 1.1 1.71.69.29 1.48.14 1.98-.36l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06c-.5.5-.65 1.3-.36 1.98.29.7 1 1.1 1.71 1.1H21a2 2 0 0 1 0 4h-.09c-.7 0-1.42.4-1.71 1z" stroke="#053047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </header>
+
   <main>
     <section class="welcome card" id="welcomeCard" aria-live="polite">
       <div class="greeting">
@@ -155,6 +147,7 @@
         <button class="btn btn-primary" id="startBtn">Comenzar</button>
       </div>
     </section>
+
     <section class="task-view card" id="taskView" style="display:none">
       <div class="task-card" id="taskCardContainer" aria-live="polite"></div>
       <button class="btn btn-primary" id="markDoneBtn" disabled>Marcar como completada</button>
@@ -162,32 +155,32 @@
         <button class="btn btn-soft" id="prevTaskBtn">Anterior tarea</button>
         <button class="btn btn-primary" id="nextTaskBtn">Siguiente tarea</button>
       </div>
-      <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-        <div class="small">Tareas completadas: <strong id="doneCount">0</strong> / <strong id="totalCount">0</strong></div>
-        <div class="small">Puntos: <strong id="points">0</strong> ⭐</div>
-      </div>
     </section>
+
+    <aside class="side card">
+      <div>
+        <strong>Progreso</strong>
+        <div class="small">Avance de hoy</div>
+        <div style="margin-top:10px" class="meter"><div id="meterFill" class="meter-fill"></div></div>
+      </div>
+      <div>
+        <strong>Próxima tarea</strong>
+        <div id="nextPreview" class="small">—</div>
+      </div>
+      <div class="reward-block">
+        <strong>Tu recompensa</strong>
+        <div id="rewardText" class="reward-text" aria-label="Texto de recompensa"></div>
+      </div>
+    </aside>
   </main>
-  <aside class="side card">
-    <div>
-      <strong>Progreso</strong>
-      <div class="small">Avance de hoy</div>
-      <div style="margin-top:10px" class="meter"><div id="meterFill" class="meter-fill"></div></div>
-    </div>
-    <div>
-      <strong>Próxima tarea</strong>
-      <div id="nextPreview" class="small">—</div>
-    </div>
-    <div class="reward-block">
-      <strong>Tu recompensa</strong>
-      <div id="rewardText" class="reward-text" aria-label="Texto de recompensa"></div>
-    </div>
-  </aside>
 </div>
+
 <div id="modalRoot" style="display:none"></div>
+
 <script>
   // Borra datos previos guardados al iniciar para prueba limpia
   localStorage.removeItem('heroroutine_spa_v1');
+
   const STORAGE_KEY = 'heroroutine_spa_v1';
   let state = {
     userName: '',
@@ -200,6 +193,7 @@
     realRewards: ["Una salida al parque"],
     pointsAwardedTasks: [],
   };
+
   const welcomeCard = document.getElementById('welcomeCard');
   const nameInput = document.getElementById('nameInput');
   const startBtn = document.getElementById('startBtn');
@@ -216,10 +210,13 @@
   const modalRoot = document.getElementById('modalRoot');
   const rewardTextEl = document.getElementById('rewardText');
   const markDoneBtn = document.getElementById('markDoneBtn');
+
   let currentIndex = 0;
+
   function saveState(){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
+
   function initUI(){
     if(state.userName !== ''){
       nameInput.value = state.userName;
@@ -230,10 +227,12 @@
     updateNextPreview();
     renderRewardText();
   }
+
   function showWelcomeGreeting(name){
     const title = document.getElementById('welcomeTitle');
     title.textContent = `Hola, ${name} 👋 ¿Estás listo para tus tareas de hoy?`;
   }
+
   startBtn.addEventListener('click', () => {
     let name = nameInput.value.trim();
     if(name === '') name = 'Amigo';
@@ -253,14 +252,20 @@
       renderTaskAt(0);
     }, 380);
   });
+
   prevTaskBtn.addEventListener('click', () => {
     if(currentIndex > 0) renderTaskAt(currentIndex - 1);
   });
+
   nextTaskBtn.addEventListener('click', () => {
     const t = state.tasks[currentIndex];
     if(!t) return;
     if(t.steps && t.steps.length > 0 && (t.completedSteps||[]).length !== t.steps.length){
       showToast('Primero completá todos los pasos');
+      return;
+    }
+    if(currentIndex === state.tasks.length -1){
+      showFinishedModal();
       return;
     }
     if(!t.completed){
@@ -275,6 +280,23 @@
     updateStats();
     renderTaskAt(Math.min(currentIndex+1, state.tasks.length-1));
   });
+
+  function showFinishedModal(){
+    const modalHtml = `
+      <header><strong>¡Felicitaciones!</strong></header>
+      <p style="font-size:16px; margin-top:12px;">Haz terminado todas tus tareas.</p>
+      <p style="font-size:16px;">Tu recompensa te espera:</p>
+      <div style="margin-top:16px; padding:12px; background:#cef5ff; border-radius:12px; font-weight:700; font-size:18px; color:#0365b1;">
+        ${state.realRewards.length > 0 ? state.realRewards[0] : '(No hay recompensa)'}
+      </div>
+      <button class="btn btn-primary" id="closeFinishedModalBtn" style="margin-top:20px;">Cerrá</button>
+    `;
+    const modal = createModal(modalHtml);
+    modal.querySelector('#closeFinishedModalBtn').addEventListener('click', ()=> {
+      closeModal();
+    });
+  }
+
   markDoneBtn.addEventListener('click', () => {
     const t = state.tasks[currentIndex];
     if(!t) return;
@@ -294,15 +316,17 @@
     showToast('Tarea completada +10 ⭐');
     updateStats();
     renderTaskAt(currentIndex);
-    setTimeout(() => {
+    setTimeout(()=>{
       if(currentIndex < state.tasks.length - 1) renderTaskAt(currentIndex + 1);
+      else showFinishedModal();
     }, 700);
   });
+
   function renderTaskAt(index){
     if(state.tasks.length === 0){
       taskCardContainer.innerHTML = `<div class="task-step"><h3>No hay tareas</h3><p>Pedile a mamá o papá que agregue tareas desde el panel de padres.</p></div>`;
       nextPreview.textContent = '—'; 
-      updateStats();
+      updateStats(); 
       return;
     }
     if(index < 0) index = 0;
@@ -391,12 +415,14 @@
     updateControls();
     updateNextPreview();
   }
+
   function updateControls(){
     prevTaskBtn.disabled = currentIndex === 0;
     nextTaskBtn.disabled = currentIndex >= state.tasks.length - 1;
     const t = state.tasks[currentIndex];
     markDoneBtn.disabled = !t || t.completed;
   }
+
   function updateStats(){
     const total = state.tasks.length;
     const done = state.tasks.filter(t=>t.completed).length;
@@ -407,6 +433,7 @@
     meterFill.style.transition = 'width 0.6s ease';
     meterFill.style.width = percent + '%';
   }
+
   function updateNextPreview(){
     if(state.tasks.length === 0){ nextPreview.textContent = '—'; return; }
     const idx = Math.min(currentIndex+1, state.tasks.length-1);
@@ -414,6 +441,7 @@
     nextPreview.textContent = next ? `${next.icon || ''} ${next.name}` : '—';
     updateStats();
   }
+
   function showFloatingStars(text, container){
     const star = document.createElement('div');
     star.textContent = text;
@@ -434,6 +462,7 @@
     }, 20);
     setTimeout(()=> star.remove(), 1000);
   }
+
   function showToast(msg){
     const t = document.createElement('div');
     t.textContent = msg;
@@ -453,10 +482,13 @@
       setTimeout(()=> t.remove(), 450);
     }, 1600);
   }
+
   function renderRewardText(){
     rewardTextEl.textContent = state.realRewards.length > 0 ? state.realRewards[0] : '(No hay recompensa definida)';
   }
+
   openParentBtn.addEventListener('click', ()=> openPasswordPrompt());
+
   function openPasswordPrompt(){
     const md = createModal(`
       <header><strong>Acceso Panel de Padres</strong><button id="closeX" aria-label="cerrar">✖</button></header>
@@ -482,6 +514,7 @@
       if(e.key === 'Enter') md.querySelector('#parentEnter').click();
     });
   }
+
   function openParentPanel(){
     const modalHtml = `
       <header><strong>Panel de Padres</strong><div style="display:flex;gap:8px"><button id="closePanel" class="btn btn-soft">Cerrar</button></div></header>
@@ -597,7 +630,7 @@
     const handler = () => {
       const name = nameField.value.trim();
       const icon = iconField.value.trim() || '📝';
-      const steps = stepsField.value.trim() ? stepsField.value.split(',').map(s=>s.trim()).filter(Boolean) : [];
+      const steps = stepsField.value.trim() ? stepsField.value.split(',').map(s => s.trim()).filter(Boolean) : [];
       if(!name) return alert('Ingrese nombre');
       t.name = name; t.icon = icon; t.steps = steps; t.completed = false; t.completedSteps = [];
       saveState(); renderParentTaskList(modalEl); renderTaskAt(currentIndex);
@@ -621,19 +654,15 @@
   initUI();
 </script>
 <style>
-  @media (max-width: 920px) {
-    .app {
-      grid-template-columns: 1fr !important;
-      justify-items: center;
-    }
-    .task-view.card,
-    aside.side.card {
-      width: 90vw;
-      max-width: 100%;
-      margin: 0 auto;
-      align-items: center;
-    }
+  /* MANTENEMOS TU CSS ORIGINAL ADECUADO */
+  /* ... */
+  /* SOLO AÑADIMOS: */
+  .side.card {
+    margin-top: 16px;
+    /* expandir ancho completo */
+    width: 100%;
   }
+  /* Ajuste responsive si usas otro */
 </style>
 </body>
 </html>
